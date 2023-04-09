@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Simple-Movie</title>
+</head>
+<body>
+	<div>
+		<p>
+			안녕하세요. <span th:text="${nickname}"></span>님
+		</p>
+
+		<h2 th:text="${message}">메시지</h2>
+
+		<div>
+			<p>아래의 토큰을 입력하세요.</p>
+			<small th:text="${token}"></small>
+		</div>
+	</div>
+	<footer>
+		<small>Simple-movie&copy; 2023</small>
+	</footer>
+</body>
+</html>

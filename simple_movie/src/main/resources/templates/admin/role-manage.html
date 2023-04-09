@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head th:replace="admin/admin-fragments.html::head"></head>
+<style th:replace="admin/admin-fragments.html::style"></style>
+
+<body>
+	<div id="preloder">
+		<div class="loader"></div>
+	</div>
+
+	<header th:replace="admin/admin-fragments.html :: header"></header>
+
+	<section class="anime-details spad">
+		<div class="tbl_wrp">
+			<table class="table">
+				<thead>
+					<tr class="table-info">
+						<th scope="col">권한 ID</th>
+						<th scope="col">권한명</th>
+						<th scope="col">권한 LEVEL</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="link_btn hover" th:each="role : ${roles}">
+
+						<td style="text-align: left;"><a th:href="@{'/admin/role/' + ${role.id}}"><span th:text="${role.id}">회원</span></a></td>
+						<td style="text-align: left;" th:text="${role.roleName}"></td>
+						<td style="text-align: left;" th:text="${role.level}"></td>
+					</tr>
+				</tbody>
+			</table>
+			<div style="text-align: right;">
+				<p>
+					<a class="btn btn-dark btn-lg" style="margin: 10;" th:href="@{/admin/role/register}">권한 등록</a>
+				</p>
+			</div>
+		</div>
+	</section>
+	<div th:replace="admin/admin-fragments.html :: alert-message"></div>
+	<div th:replace="admin/admin-fragments.html :: default-script"></div>
+</body>
+</html>

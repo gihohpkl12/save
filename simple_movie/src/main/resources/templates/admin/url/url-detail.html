@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="admin/admin-fragments.html::head"></head>
+
+<style>
+	label {color:white}
+</style>
+
+<body>
+	<header th:replace="admin/admin-fragments.html :: header"></header>
+
+	<div id="maininner" th:if="${url}">
+		<div class="tbl_wrp">
+			<form class="form-horizontal" th:action="@{/admin/url/url-edit}" method="post" th:object="${urlForm}">
+				<div class="form-group">
+					<input th:type="hidden" name="id" th:value="${url.id}" />
+				</div>
+
+				<div class="form-group">
+					<label for="url" class="col-sm-2 control-label">url</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control input-large" name="url" id="url" placeholder="리소스명" th:value="${url.url}">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="orderNum" class="col-sm-2 control-label">순서</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control input-large" name="orderNum" id="orderNum" placeholder="순서" th:value="${url.orderNum}">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="roleName" class="col-sm-2 control-label">권한</label>
+					<div class="col-sm-10">
+						<select class="custom-select" name="roleName" id="roleName">
+							<option th:each="role: ${roles}" th:value="${role.roleName}" th:text="${role.roleName}" th:selected="${#strings.equals(url.role.roleName, role.roleName)} ? 'true' : 'false'" />
+						</select>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-offset-1 col-sm-10">
+						<button type="Submit" class="btn btn-dark btn-lg">등록</button>
+						<a class="btn btn-dark btn-lg" style="margin: 10;" th:href="@{/admin/url-manage}">목록 </a> 
+					</div>
+				</div>
+			</form>
+			
+			<form class="form-horizontal" th:action="@{/admin/url/url-delete}" method="post">
+				<div class="form-group">
+					<input th:type="hidden" name="id" id="id" th:value="${url.id}"/>
+					<button type="Submit" class="btn btn-dark btn-lg" style="margin-left: 15px;">삭제</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	
+	<div id="maininner" th:if="!${url}">
+		<div class="tbl_wrp">
+			<form class="form-horizontal" th:action="@{/admin/url/url-enroll}" method="post" th:object="${urlForm}">
+
+				<div class="form-group">
+					<label for="url" class="col-sm-2 control-label">url</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control input-large" name="url" id="url" placeholder="리소스명">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="orderNum" class="col-sm-2 control-label">순서</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control input-large" name="orderNum" id="orderNum" placeholder="순서" th:value=0>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="roleName" class="col-sm-2 control-label">권한</label>
+					<div class="col-sm-10">
+						<select class="custom-select" name="roleName" id="roleName">
+							<option th:each="role: ${roles}" th:value="${role.roleName}" th:text="${role.roleName}" th:selected="${#strings.equals(role.roleName, 'ROLE_NONE')} ? 'true' : 'false'" />
+						</select>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-offset-1 col-sm-10">
+						<button type="Submit" class="btn btn-dark btn-lg">등록</button>
+						<a class="btn btn-dark btn-lg" style="margin: 10;" th:href="@{/admin/url-manage}">목록 </a> 
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div th:replace="admin/admin-fragments.html :: default-script"></div>
+</body>
+</html>

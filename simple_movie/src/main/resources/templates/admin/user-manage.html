@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head th:replace="admin/admin-fragments.html::head"></head>
+<style th:replace="admin/admin-fragments.html::style"></style>
+
+<body>
+	<div id="preloder">
+		<div class="loader"></div>
+	</div>
+
+	<header th:replace="admin/admin-fragments.html :: header"></header>
+
+	<section class="anime-details spad">
+		<div class="tbl_wrp">
+			<table class="table">
+				<thead>
+					<tr class="table-info">
+						<th scope="col">닉네임</th>
+						<th scope="col">이메일</th>
+						<th scope="col">권한</th>
+						<th scope="col">가입일</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="link_btn hover" th:each="user : ${users}">
+
+						<td style="text-align: left;"><a th:href="@{'/admin/user/' + ${user.nickname}}"><span th:text="${user.nickname}">회원</span></a></td>
+						<td style="text-align: left;" th:text="${user.email}"></td>
+						<td style="text-align: left;" th:text="${user.role}"></td>
+						<td style="text-align: left;" th:text="${user.joinDate}"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</section>
+	<div th:replace="admin/admin-fragments.html :: alert-message"></div>
+	<div th:replace="admin/admin-fragments.html :: default-script"></div>
+</body>
+</html>
+
+
+
+
+

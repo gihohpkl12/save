@@ -1,0 +1,185 @@
+요구사항
+
+1. 개요
+    영화 정보를 제공하는 사이트 개발.
+    영화 정보는 회원을 대상으로 제공함.
+    영화 정보는 KMDB OPEN API를 통해 가져옴.
+    제공하는 정보는 배우, 감독, 포스터, 제목, docid, 영화seq, 제작년도, 장르, 감독, 등급, 제작 국가, 줄거리, 상영시간, 제작 회사 정도.
+
+2. 스택
+    spring boot, spring security, spring jpa, postgresql, thymeleaf
+
+3. 페이지
+    3-1) 메인 페이지
+        권한 : 없음
+        정보 : 개봉 예정 or 상영중인 영화(12개) 및 최근에 리뷰가 달린 영화 목록 제공.
+        -> 변경 : KMDB의 상영중인 영화 api가 작동하지 않음. 영화 정보에서 releaseDate를 기준으로 최근의 영화를 출력하는 것으로 변경
+        
+        사진 혹은 영화 제목을 클릭하면 상세 페이지로 이동함.
+
+    3-2) 상세 페이지
+        권한 : ROLE_USER
+        정보 : 개요에서 언급한 영화 정보 및 사용자의 follow 여부 및 리뷰 정보 제공.
+        Validation :
+            제목, seq, docid이 NotBlank
+        기타 : 
+            리뷰 작성자의 경우 리뷰 밑에 삭제 버튼이 출력됨. 
+            follow 버튼을 누르면 ajax로 전송 (페이지 새로고침 방지하기 위해)
+
+    3-3) 회원 가입 페이지
+        권한 : 없음
+        입력 : 이메일, 닉네임, 비밀번호, 비밀번호 재입력
+        Validation :
+            공통 - NotBlank
+            이메일 - 중복, 패턴 검사
+            닉네임 - 중복 검사
+            비밀번호 - 패턴 검사(간단하게 4글자 이내, 숫자만)
+            비밀번호 재입력 - 비밀번호와 동일.
+
+    3-4) 로그인 페이지
+        권한 : 없음
+        입력 : 닉네임, 패스워드
+        Validation : 
+            공통 - NotBlank
+        기타 :
+            권한이 필요한 페이지를 로그인하지 않은 상태에서 클릭하면 자동으로 redirect됨.
+            로그인 하면 마지막으로 이동하려고 했던 페이지로 redirect 됨.
+
+    3-5) ID 찾기 페이지
+        권한 : 없음
+        입력 : 이메일
+        결과 : 아이디
+
+    3-6) PW 찾기 페이지
+        권한 : 없음
+        입력 : 아이디
+        결과 : 
+            등록된 메일로 토큰 전송.
+            전송된 토큰을 입력해서 일치하면 비밀번호를 초기화.
+    
+    3-7) 신작 영화 페이지
+        권한 : ROLE_USER
+        정보 : 서버에서 설정한 기간 내에 상영 or 개봉 예정인 모든 영화 리스트
+
+    3-8) 마이페이지
+        권한 : ROLE_USER
+        정보 : 회원 정보 출력(닉네임, 이메일, 가입일, 권한)
+        기타 : 비밀번호 변경, 회원 탈퇴 가능.
+
+    3-9) 오래된 비밀번호 변경 페이지
+        권한 : ROLE_USER
+        정보 : 
+            마지막 비밀번호 변경일로 부터 30일이 지나면 Interceptor에 의해서 출력됨
+            변경 or 30일 후에 변경이 가능함.
+            해당 정보는 쿠키에 저장해서 관리함.
+        입력 : 현재 비밀번호, 신규 비밀번호, 신규 비밀번호 재입력
+        Validation :
+            공통 - NotBlank
+            현재 비밀번호 - 4글자 이내, 숫자만
+            신규 비밀번호 - 4글자 이내, 숫자만
+            신규 비밀번호 재입력 - 신규 비밀번호와 동일
+
+    3-10) 찜 페이지
+        권한 : ROLE_USER
+        정보 : 사용자가 follow를 누른 영화 목록 출력
+
+    3-11) 검색 버튼
+        권한 : 없음
+        정보 : 제목, 감독, 배우로 검색이 가능함.
+        Validation : 제목, 감독, 배우 중에 하나라도 값이 있어야 함.
+        결과 : 
+            검색 결과 페이지에 영화 목록이 출력되며, 
+            검색 결과 페이지는 권한이 ROLE_USER.
+            따라서 anonymous 사용자는 로그인 해야 함.
+
+    3-12) 관리자 페이지
+        권한 : ROLE_ADMIN
+        정보 : 
+            사이트 관리를 위한 페이지.
+            인가를 위한 URL, ROLE를 등록할 수 있음.
+            ROLE 등록, 변경, 삭제 혹은 URL 등록, 변경, 권한 부여 시에
+            AuthorizationManager 및 Role_Hierarchy를 Reload하여 동적으로 관리하기 위함.
+
+    3-13) ROLE 관리 페이지
+        권한 : ROLE_ADMIN
+        정보 : 
+            사이트 내에 권한(ROLE)을 관리하기 위한 페이지.
+            권한 등록, 수정, 삭제 가능.
+            권한에 변동사항이 생기면 AuthorizationManager, Role_Hierarchy를 Reload함.
+            권한 level을 기준으로 계층 처리를 수행함.
+        입력 :
+            권한명, 권한 Level
+    
+    3-14) URL 관리 페이지
+        권한 : ROLE_ADMIN
+        정보 : 
+            사이트 내에 인증, 인가를 위해 URL-ROLE mapping 정보를 관리하는 위한 페이지
+            URL 등록, 삭제, 수정 가능.
+            URL에 병동사항이 생기면 AuthorizationManager 및 Role_Hierarchy를 Reload함.
+        입력 : URL, order, 권한
+
+    3-15) 사용자 관리
+        권한 : ROLE_ADMIN
+        정보 :
+            사이트에 등록된 사용자 관리를 위한 페이지
+            사용자 정보 수정, 삭제, 권한 변경이 가능함.
+4. DB
+    4-1) account 테이블
+        id : pk, @GeneratedValue
+        nickname : 닉네임
+        email : 이메일
+        role : 권한명
+        password : 비밀번호
+        joinDate : 가입일
+
+    4-2) like_domain 테이블
+        id : pk, @GeneratedValue
+        nickname : follow를 누른 사용자 닉네임
+        docid, movieSeq, title : KMDB에서 영화 구별할 때 혹시 몰라서 3가지 값을 저장함. 가끔 movieSeq 중복 등 문제가 있음.
+
+    4-3) mail_token 테이블
+        id : pk, @GeneratedValue
+        email_token : 비밀번호 조회를 위해 생성한 토큰.
+        nickname : 비밀번호를 조회한 사용자 닉네임
+    
+    4-4) review 테이블
+        id : pk, @GeneratedValue
+        content : 리뷰 내용
+        create_date : 리뷰 작성일
+        docid, movieSeq, title : 영화 구별 목적으로 저장.
+        nickname : 리뷰를 작성한 사용자 닉네임
+
+    4-5) role 테이블
+        id : pk, @GeneratedValue
+        level : 권한 수준
+        role_name : 권한명
+    
+    4-6) url 테이블 
+        id : pk, @GeneratedValue
+        url : url
+        role_id : 해당 url에 mapping된 권한
+
+5. ToDo
+    5-1) JPA
+        JPA에 의해 생성되는 쿼리 체크 및 수정
+    
+    5-2) REDIS
+        멀티 서버를 가정하여 redis에서 세션을 관리하도록 변경하는 것을 고려중.
+    
+    5-3) 소스 리팩토링
+        5-3-1) 빈 주입 방식 변경 생각중 
+            실무에서 @Autowired를 통한 주입 방식보다 생성자 주입 방식을 선호하는 것으로 보임.
+            - final을 사용하여 의존성 주입 실수를 방지 가능.
+            - 순환참조 방지 
+
+        5-3-2) 메소드, 변수명 수정
+
+        5-3-3) Service등 공통 클래스 구조 관리
+            Service - ServiceImpl 구조가 아니라 그냥 Service로 생성하니까 메소드 등에서 관리가 안 되는 것 같음.
+            추상화
+
+        5-3-4) 테스트 코드 작성 
+            테스트 코드를 작성해서 테스트를 진행하는 연습을 해야할 것 같음
+
+        5-3-4) Spring security
+            Security 6.0부터 변경사항이 많아서 6.0 이후 버전으로 개발했는데 공식 문서를 참고해서 수정할 사항이 있는지 다시 한 번 확인해야 할 듯

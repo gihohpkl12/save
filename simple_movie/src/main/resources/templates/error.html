@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head th:replace="fragments.html :: head"></head>
+
+<body>
+	<div id="preloder">
+		<div class="loader"></div>
+	</div>
+
+	<div class="section-title" style="color: white">
+		<h3 style="color: white; text-align: center">ERROR PAGE</h3>
+		<div>
+			<p style="color: white; text-align: center">오류 화면입니다</p>
+
+			<li>오류 정보</li>
+				<ul>
+					<li>해당 페이지에 접근 할 수 없습니다.</li>
+					<li th:text="|timestamp: ${timestamp}|"></li>
+				</ul>
+			</li>
+		</div>
+		<a href="/">메인 페이지로 이동</a>
+
+	</div>
+
+	<div th:replace="fragments.html :: default-script"></div>
+</body>
+</html>

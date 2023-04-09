@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head th:replace="admin/admin-fragments.html::head"></head>
+<style th:replace="admin/admin-fragments.html::style"></style>
+
+<body>
+	<div id="preloder">
+		<div class="loader"></div>
+	</div>
+
+	<header th:replace="admin/admin-fragments.html :: header"></header>
+
+	<section class="anime-details spad">
+		<div class="tbl_wrp">
+			<table class="table">
+				<thead>
+					<tr class="table-info">
+						<th scope="col">URL ID</th>
+						<th scope="col">URL</th>
+						<th scope="col">ROLE</th>
+						<th scope="col">ORDER NUM</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="link_btn hover" th:each="url : ${urls}">
+
+						<td style="text-align: left;"><a th:href="@{'/admin/url/' + ${url.id}}"><span th:text="${url.id}">회원</span></a></td>
+						<td style="text-align: left;" th:text="${url.url}"></td>
+						<td style="text-align: left;" th:text="${url.role}"></td>
+						<td style="text-align: left;" th:text="${url.orderNum}"></td>
+					</tr>
+				</tbody>
+			</table>
+			<div style="text-align: right;">
+				<p>
+					<a class="btn btn-dark btn-lg" style="margin: 10;" th:href="@{/admin/url/register}">URL 등록</a>
+				</p>
+			</div>
+		</div>
+	</section>
+	<div th:replace="admin/admin-fragments.html :: alert-message"></div>
+	<div th:replace="admin/admin-fragments.html :: default-script"></div>
+
+</body>
+</html>

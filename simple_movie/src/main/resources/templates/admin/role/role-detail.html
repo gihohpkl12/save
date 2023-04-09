@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="admin/admin-fragments.html::head"></head>
+
+<style>
+	label {color:white}
+</style>
+
+<body>
+	<header th:replace="admin/admin-fragments.html :: header"></header>
+
+	<div id="maininner" th:if="${role}">
+		<div class="tbl_wrp">
+			<form class="form-horizontal" th:action="@{/admin/role/role-edit}" method="post" th:object="${roleForm}">
+				<div class="form-group">
+					<input th:type="hidden" name="id" th:value="${role.id}" />
+				</div>
+
+				<div class="form-group">
+					<label for="url" class="col-sm-2 control-label">권한명</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control input-large" name="roleName" id="roleName" placeholder="권한명" th:value="${role.roleName}">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="orderNum" class="col-sm-2 control-label">Level</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control input-large" name="level" id="level" placeholder="level" th:value="${role.level}">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-offset-1 col-sm-10">
+						<button type="Submit" class="btn btn-dark btn-lg">등록</button>
+						<a class="btn btn-dark btn-lg"  th:href="@{/admin/url-manage}">목록 </a> 
+					</div>
+				</div>
+			</form>
+			
+			<form class="form-horizontal" th:action="@{/admin/role/role-delete}" method="post">
+				<div class="form-group">
+					<input th:type="hidden" name="id" id="id" th:value="${role.id}"/>
+					<button type="Submit" class="btn btn-dark btn-lg" style="margin-left: 15px;">삭제</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	
+	<div id="maininner" th:if="!${role}">
+		<div class="tbl_wrp">
+			<form class="form-horizontal" th:action="@{/admin/role/role-enroll}" method="post" th:object="${roleForm}">
+
+				<div class="form-group">
+					<label for="url" class="col-sm-2 control-label">권한명</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control input-large" name="roleName" id="roleName" placeholder="권한명">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="orderNum" class="col-sm-2 control-label">Level</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control input-large" name="level" id="level" placeholder="level">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-offset-1 col-sm-10">
+						<button type="Submit" class="btn btn-dark btn-lg">등록</button>
+						<a class="btn btn-dark btn-lg" style="margin: 10;" th:href="@{/admin/url-manage}">목록 </a> 
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div th:replace="admin/admin-fragments.html :: default-script"></div>
+</body>
+</html>

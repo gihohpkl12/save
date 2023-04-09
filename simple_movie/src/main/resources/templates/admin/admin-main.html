@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head th:replace="admin/admin-fragments.html::head"></head>
+ 
+<body>
+	<div id="preloder">
+		<div class="loader"></div>
+	</div>
+
+	<header th:replace="admin/admin-fragments.html :: header"></header>
+
+	<section class="anime-details spad">
+		<div class="container">
+			<div class="anime__details__content">
+				<div class="row">
+					<div class="col-lg-9">
+						<div class="anime__details__text">
+							<div class="anime__details__title">
+								<h3>관리자 페이지</h3>
+							</div>
+							<div class="anime__details__widget">
+								<div class="row">
+									<div class="col-lg-10 col-md-6">
+										<ul>
+											<li>관리자 전용 페이지입니다.</li>
+											<!-- 
+											<li th:text="|아이디 : ${account.nickname}|"></li>
+											<li th:text="|이메일 : ${account.email}|"></li>
+											<li th:text="|권한 : ${account.role}|"></li>
+											 -->
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<div th:replace="admin/admin-fragments.html :: alert-message"></div>
+	<div th:replace="admin/admin-fragments.html :: default-script"></div>
+</body>
+</html>

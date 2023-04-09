@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="admin/admin-fragments.html::head"></head>
+
+<style>
+label {
+	color: white
+}
+</style>
+
+<body>
+	<header th:replace="admin/admin-fragments.html :: header"></header>
+
+	<div id="maininner" th:if="${user}">
+		<div class="tbl_wrp">
+			<form class="form-horizontal" th:action="@{/admin/user/user-edit}" method="post" th:object="${accountForm}">
+				<div class="form-group">
+					<input th:type="hidden" name="id" th:value="${user.id}" />
+				</div>
+
+				<div class="form-group">
+					<label for="nickname" class="col-sm-2 control-label">닉네임</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control input-large" name="nickname" id="nickname" placeholder="닉네임" th:value="${user.nickname}">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="email" class="col-sm-2 control-label">이메일</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control input-large" name="email" id="email" placeholder="이메일" th:value="${user.email}">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="roleName" class="col-sm-2 control-label">권한</label>
+					<div class="col-sm-10">
+						<select class="custom-select" name="role" id="role">
+							<option th:each="role: ${roles}" th:value="${role.roleName}" th:text="${role.roleName}" th:selected="${#strings.equals(user.role, role.roleName)} ? 'true' : 'false'" />
+						</select>
+					</div>
+				</div>
+
+				<div>
+					<label for="joinDate" class="col-sm-2 control-label">가입일</label>
+					<div class="col-sm-10">
+						<div class="form-control input-large" id="joinDate" th:text="${#temporals.format(user.joinDate,'yyyy-MM-dd')}"></div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-offset-1 col-sm-10">
+						<button type="Submit" class="btn btn-dark btn-lg">등록</button>
+						<a class="btn btn-dark btn-lg" style="margin: 10;" th:href="@{/admin/user-manage}">목록 </a> 
+					</div>
+				</div>
+			</form>
+			
+			<form class="form-horizontal" th:action="@{/admin/user/user-delete}" method="post">
+				<div class="form-group">
+					<input th:type="hidden" name="id" id="id" th:value="${user.id}"/>
+					<button type="Submit" class="btn btn-dark btn-lg" style="margin-left: 15px;">삭제</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<div id="maininner" th:if="!${user}">
+		<div class="tbl_wrp">
+			<form class="form-horizontal" th:action="@{/admin/user/user-enroll}" method="post" th:object="${accountForm}">
+
+				<div class="form-group">
+					<label for="nickname" class="col-sm-2 control-label">닉네임</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control input-large" name="nickname" id="nickname" placeholder="닉네임">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="email" class="col-sm-2 control-label">이메일</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control input-large" name="email" id="email" placeholder="이메일">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="email" class="col-sm-2 control-label">패스워드</label>
+					<div class="col-sm-10">
+						<input type="password" class="form-control input-large" name="password" id="password" placeholder="비밀번호">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="email" class="col-sm-2 control-label">패스워드</label>
+					<div class="col-sm-10">
+						<input type="password" class="form-control input-large" name="repeatPassword" id="passwordPassword" placeholder="비밀번호 재입력">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="roleName" class="col-sm-2 control-label">권한</label>
+					<div class="col-sm-10">
+						<select class="custom-select" name="roleName" id="roleName">
+							<option th:each="role: ${roles}" th:value="${role.roleName}" th:text="${role.roleName}" />
+						</select>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-offset-1 col-sm-10">
+						<button type="Submit" class="btn btn-dark btn-lg">등록</button>
+						<a class="btn btn-dark btn-lg" style="margin: 10;" th:href="@{/admin/user-manage}">목록 </a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div th:replace="admin/admin-fragments.html :: default-script"></div>
+</body>
+</html>

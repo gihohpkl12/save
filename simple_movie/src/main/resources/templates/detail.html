@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head th:replace="fragments.html :: head-csrf"></head>
+
+<body>
+	<div id="preloder">
+		<div class="loader"></div>
+	</div>
+
+	<header th:replace="fragments.html :: header"></header>
+
+	<div class="breadcrumb-option">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="breadcrumb__links">
+						<a href="/"><i class="fa fa-home"></i> Home</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<section class="anime-details spad">
+		<div class="container">
+			<div class="anime__details__content">
+				<div class="row">
+					<div class="col-lg-3">
+						<div class="anime__details__pic set-bg"
+							th:data-setbg="${movie.posters[0]}"></div>
+					</div>
+					<div class="col-lg-9">
+						<div class="anime__details__text">
+							<div class="anime__details__title">
+								<h3 th:text="${movie.title}">영화 이름</h3>
+								<span th:text=${movie.prodYear}></span>
+							</div>
+							<div class="anime__details__rating"></div>
+							<p th:text="${movie.plot}"></p>
+							<div class="anime__details__widget">
+								<div class="row">
+									<div class="col-lg-10 col-md-6">
+										<ul>
+											<li th:text="|Director : ${#strings.toString(movie.directors)}|"></li> 
+											<li th:text="|Actor : ${#strings.toString(movie.actors)}|"></li>
+											<li th:text="|Genre : ${movie.genre}|"></li>
+											<li th:text="|Grade : ${movie.ratingGrade}|"></li>
+											<li th:text="|Nation : ${movie.nation}|"></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="anime__details__btn">
+								<a class="follow-btn" id="like" style="cursor: pointer;"
+									onclick="sendLikeChange();" th:text = "${like}">FOLLOW</a>
+							</div>
+							<script>
+								var likeRequest = new XMLHttpRequest();
+								
+								function sendLikeChange() {
+									var token = $("meta[name='_csrf']").attr("content");
+									var header = $("meta[name='_csrf_header']").attr("content");
+									var title = '[[${movie.title}]]';
+									var movieSeq = '[[${movie.movieSeq}]]';
+									var docid = '[[${movie.docid}]]';
+									var nickname = '[[${#authentication.principal.nickname}]]';
+									
+									var jsonData = {
+											"title" : title,
+											"movieSeq" : movieSeq,
+											"docid" : docid,
+											"nickname": nickname
+										}
+									
+									if(document.getElementById('like').innerText=='FOLLOW') {
+										$.ajax({
+											type: 'POST',
+											contentType: "application/json",
+											url:'/like-enroll',
+											data: JSON.stringify(jsonData), // String -> json 형태로 변환
+											beforeSend : function(xhr) {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+												xhr.setRequestHeader(header, token);
+								            },
+											dataType: 'json', // success 시 받아올 데이터 형
+											async: true, //동기, 비동기 여부
+											cache :false, // 캐시 여부
+											success: function(data){
+												document.getElementById('like').innerText = data.like;
+											},
+											error:function(xhr,status,error){
+												console.log('error:'+error);
+											}
+										});
+									} else {
+										$.ajax({
+											type: 'POST',
+											contentType: "application/json",
+											url:'/like-delete',
+											data: JSON.stringify(jsonData), // String -> json 형태로 변환
+											beforeSend : function(xhr) {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+												xhr.setRequestHeader(header, token);
+								            },
+											dataType: 'json', // success 시 받아올 데이터 형
+											async: true, //동기, 비동기 여부
+											cache :false, // 캐시 여부
+											success: function(data){
+												document.getElementById('like').innerText = data.like;
+											},
+											error:function(xhr,status,error){
+												console.log('error:'+error);
+											}
+										});
+									}
+								}
+							</script>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-8 col-md-8">
+					<div th:if="${error}" class="form-group">
+						<span th:text="${error}" class="alert alert-danger"></span>
+					</div>
+					<div th:if="${message}" class="form-group">
+						<span th:text="${message}" class="alert alert-danger"></span>
+					</div>
+					<div class="anime__details__review">
+						<div class="section-title">
+							<h5>Reviews</h5>
+						</div>
+						<div class="anime__review__item">
+							<div th:each="reviews : ${reviews}"
+								class="anime__review__item__text">
+								<h6 th:text="|${reviews.nickname}. ${reviews.createDate}|"></h6>
+								<p id="fix" th:text="${reviews.content}">리뷰 내용</p>
+								
+								<div th:if="${#strings.equals(reviews.nickname, #authentication.principal.nickname)}">
+									<form class="needs-validation col-sm-6" th:action="@{/delete-review}" method="post" th:object="${movie}">
+										<div class="form-group">
+											<input type="hidden" id="moiveSeq" th:field="*{movieSeq}"/>
+											<input type="hidden" id="title" th:field="*{title}"/> 
+											<input type="hidden" id="docid" th:field="*{docid}"/>
+											<input type="hidden" id="nickname" name = "nickname" th:value="${#authentication.principal.nickname}"/>
+											<input type="hidden" id ="id" name="id" th:value="${reviews.id}"/>
+											<button type="submit"
+												style="background-color: red; color: white; margin-top:5px">삭제</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="anime__details__form">
+						<div class="section-title">
+							<h5>Your Comment</h5>
+						</div>
+						
+						<form th:action="@{/add-review}" method="post" th:object="${reviewEnrollForm}">
+							<div class="form-group">
+								<input type="hidden" id="moiveSeq" name = "movieSeq" th:value="${movie.movieSeq}"/>
+								<input type="hidden" id="title" name = "title" th:value="${movie.title}"/> 
+								<input type="hidden" id="docid" name = "docid" th:value="${movie.docid}"/>
+								<!-- <input type="hidden" id="nickname" name = "nickname" th:value="${movie.title}"/> -->
+								<input type="hidden" id="nickname" name = "nickname" th:value="${#authentication.principal.nickname}"/>
+								<textarea placeholder="Your Comment" id="content" name = "content" th:field="*{content}" maxlength="100"></textarea>
+								<button type="submit">
+								<i class="fa fa-location-arrow"></i> Review</button>
+							</div>
+						</form>
+						
+					</div>
+				</div>
+				<div class="col-lg-4 col-md-4">
+					<div class="anime__details__sidebar"></div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<th:block th:replace="fragments.html :: alert-message"></th:block>
+	<footer th:replace = "fragments.html :: footer"></footer>
+	<div th:replace="fragments.html :: search"></div>
+	<div th:replace="fragments.html :: default-script"></div>
+	
+</body>
+</html>

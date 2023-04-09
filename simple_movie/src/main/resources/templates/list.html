@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head th:replace="fragments.html :: head"></head>
+<body>
+	<header th:replace="fragments.html :: header"></header>
+	<section class="product spad">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8">
+					<div class="trending__product">
+						<div class="row">
+							<div class="col-lg-8 col-md-8 col-sm-8">
+								<div class="section-title">
+									<h4 th:text="${title}">List</h4>
+								</div>
+							</div>
+							
+							<div th:if="${error}" class="col-lg-8 col-md-8 col-sm-8">
+								<div class="section-title">
+									<h4 th:text="${error}">Error</h4>
+								</div>
+							</div>
+							
+						</div>
+						<div class="row">
+							<div th:each="movie : ${movies}" class="col-lg-4 col-md-6 col-sm-6">
+								<div class="product__item">
+									<div class="product__item__pic set-bg" th:data-setbg="${movie.posters[0]}" th:onclick="|location.href='@{/details?movieSeq={id}&title={id2}&docid={id3}(id=${movie.movieSeq}, id2=${movie.title}, id3=${movie.docid})}'|" style="cursor: pointer;"></div>
+									<div class="product__item__text">
+										<h5>
+											<a th:href="@{/details?movieSeq={id}&title={id2}&docid={id3}(id=${movie.movieSeq}, id2=${movie.title}, id3=${movie.docid})}" th:text=${movie.title}></a>
+										</h5>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<th:block th:replace="fragments.html :: alert-message"></th:block>
+	<div th:replace="fragments.html :: search"></div>
+	<th:block th:replace="fragments.html :: default-script"></th:block>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<style th:fragment="style">
+	td {color:white}
+</style>
+
+<header class="header" th:fragment="header">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-2">
+				<div class="header__logo"></div>
+			</div>
+			<div class="col-lg-8">
+				<div class="header__nav">
+					<nav class="header__menu mobile-menu">
+						<ul>
+							<li class="active"><a th:href="@{/admin}">Home</a></li>
+							<li sec:authorize="isAuthenticated()"><a href="/admin/user-manage">사용자 관리</a></li>
+							<li sec:authorize="isAuthenticated()"><a href="/admin/role-manage">권한 관리</a></li>
+							<li sec:authorize="isAuthenticated()"><a href="/admin/url-manage">URL 관리</a></li>
+							<li sec:authorize="isAnonymous()"><a th:href="@{/login}">Login</a></li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+			<div class="col-lg-2">
+
+				<div class="header__right">
+					<!-- <a sec:authorize="isAuthenticated()" href="javascript:void(0)" th:onClick="javascript:logout()"><span class="icon_profile"></span>logout</a> -->
+					<form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
+						<span class="icon_profile"></span>
+						<button type="submit" class="site-btn">로그아웃</button>
+					</form>
+				</div>
+
+				<script>
+                	function logout() {
+                		let logoutTag = document.createElement('form');
+                		logoutTag.setAttribute('method', 'post');
+                		logoutTag.setAttribute('action', 'logout');
+                	    document.body.appendChild(logoutTag);
+                	    logoutTag.submit();
+                	}
+                </script>
+			</div>
+		</div>
+	</div>
+</header>
+
+<head th:fragment="head">
+	<meta charset="UTF-8">
+	<meta name="description" content="Anime Template">
+	<meta name="keywords" content="Anime, unica, creative, html">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Anime | Template</title>
+	
+	<!-- 구글 폰트 추가 -->
+	<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+	
+	<!-- Css 추가 -->
+	<!-- <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">  -->
+	<link rel="stylesheet" th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css}" />
+	<link rel="stylesheet" href="/css/font-awesome.min.css" type="text/css">
+	<link rel="stylesheet" href="/css/elegant-icons.css" type="text/css">
+	<link rel="stylesheet" href="/css/plyr.css" type="text/css">
+	<!-- <link rel="stylesheet" href="/css/nice-select.css" type="text/css"> -->
+	<link rel="stylesheet" href="/css/owl.carousel.min.css" type="text/css">
+	<link rel="stylesheet" href="/css/slicknav.min.css" type="text/css">
+	<link rel="stylesheet" href="/css/style.css" type="text/css">
+	<link rel="stylesheet" href="/css/base.css" type="text/css" />
+
+</head>
+
+<th:block th:fragment="default-script">
+	<script src="/js/jquery-3.3.1.min.js"></script>
+	<script src="/js/bootstrap.min.js"></script>
+	<script src="/js/player.js"></script>
+	<!-- <script src="/js/jquery.nice-select.min.js"></script> -->
+	<script src="/js/mixitup.min.js"></script>
+	<script src="/js/jquery.slicknav.js"></script>
+	<script src="/js/owl.carousel.min.js"></script>
+	<script src="/js/main.js"></script>
+</th:block>
+
+<th:block th:if="${message}" th:fragment="alert-message">
+	<script th:inline="javascript">
+        window.onload = () => {
+          const message = '[[${message}]]';
+			if(message) {
+				alert(message);	
+			}
+        }
+      </script>
+</th:block>
+
+</html>

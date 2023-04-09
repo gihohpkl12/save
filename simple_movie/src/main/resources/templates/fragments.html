@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<header class="header" th:fragment="header">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-2">
+				<div class="header__logo"></div>
+			</div>
+			<div class="col-lg-8">
+				<div class="header__nav">
+					<nav class="header__menu mobile-menu">
+						<ul>
+							<li class="active"><a th:href="@{/}">Home</a></li>
+							<li><a th:href="@{/all-recent-movie}">신작</a></li>
+							<li sec:authorize="isAuthenticated()"><a href="choice">찜</a></li>
+							<li sec:authorize="isAuthenticated()"><a href="mypage">My Page</a></li>
+							<li sec:authorize="isAnonymous()"><a href="join">회원가입</a></li>
+							<li sec:authorize="isAnonymous()"><a href="find/nickname">ID 찾기</a></li>
+							<li sec:authorize="isAnonymous()"><a href="find/password">PW 찾기</a></li>
+							<li sec:authorize="isAnonymous()"><a th:href="@{/login}">Login</a></li>
+							<a href="#" class="search-switch"><span class="icon_search"></span></a>
+						</ul>
+					</nav>
+				</div>
+			</div>
+			<div class="col-lg-2">
+
+				<div class="header__right">
+					<!-- <a sec:authorize="isAuthenticated()" href="javascript:void(0)" th:onClick="javascript:logout()"><span class="icon_profile"></span>logout</a> -->
+					<form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
+						<span class="icon_profile"></span>
+						<button type="submit" class="site-btn">로그아웃</button>
+					</form>
+				</div>
+
+				<script>
+                	function logout() {
+                		let logoutTag = document.createElement('form');
+                		logoutTag.setAttribute('method', 'post');
+                		logoutTag.setAttribute('action', 'logout');
+                	    document.body.appendChild(logoutTag);
+                	    logoutTag.submit();
+                	}
+                </script>
+			</div>
+		</div>
+	</div>
+</header>
+
+<head th:fragment="head">
+	<meta charset="UTF-8">
+	<meta name="description" content="Anime Template">
+	<meta name="keywords" content="Anime, unica, creative, html">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Anime | Template</title>
+
+<!-- 구글 폰트 추가 -->
+	<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<!-- Css 추가 -->
+	<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
+	<link rel="stylesheet" href="/css/font-awesome.min.css" type="text/css">
+	<link rel="stylesheet" href="/css/elegant-icons.css" type="text/css">
+	<link rel="stylesheet" href="/css/plyr.css" type="text/css">
+	<link rel="stylesheet" href="/css/nice-select.css" type="text/css">
+	<link rel="stylesheet" href="/css/owl.carousel.min.css" type="text/css">
+	<link rel="stylesheet" href="/css/slicknav.min.css" type="text/css">
+	<link rel="stylesheet" href="/css/style.css" type="text/css">
+
+</head>
+
+<head th:fragment="head-csrf">
+	<meta charset="UTF-8">
+	<meta name="description" content="Anime Template">
+	<meta name="keywords" content="Anime, unica, creative, html">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="_csrf" th:content="${_csrf.token}"/>
+	<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+	<title>Anime | Template</title>
+
+<!-- 구글 폰트 추가 -->
+	<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<!-- Css 추가 -->
+	<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
+	<link rel="stylesheet" href="/css/font-awesome.min.css" type="text/css">
+	<link rel="stylesheet" href="/css/elegant-icons.css" type="text/css">
+	<link rel="stylesheet" href="/css/plyr.css" type="text/css">
+	<link rel="stylesheet" href="/css/nice-select.css" type="text/css">
+	<link rel="stylesheet" href="/css/owl.carousel.min.css" type="text/css">
+	<link rel="stylesheet" href="/css/slicknav.min.css" type="text/css">
+	<link rel="stylesheet" href="/css/style.css" type="text/css">
+
+</head>
+
+<th:block th:fragment="default-script">
+	<script src="/js/jquery-3.3.1.min.js"></script>
+	<script src="/js/bootstrap.min.js"></script>
+	<script src="/js/player.js"></script>
+	<script src="/js/jquery.nice-select.min.js"></script>
+	<script src="/js/mixitup.min.js"></script>
+	<script src="/js/jquery.slicknav.js"></script>
+	<script src="/js/owl.carousel.min.js"></script>
+	<script src="/js/main.js"></script>
+</th:block>
+
+<footer class="footer" th:fragment="footer">
+	<div class="page-up">
+		<a href="#" id="scrollToTopButton"><span class="arrow_carrot-up"></span></a>
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-3"></div>
+			<div class="col-lg-6"></div>
+			<div class="col-lg-3"></div>
+		</div>
+	</div>
+</footer>
+
+<div class="search-model" th:fragment="search">
+	<div class="h-100 d-flex align-items-center justify-content-center">
+		<div class="search-close-switch">
+			<i class="icon_close"></i>
+		</div>
+		<form th:action="@{/search}" class="search-model-form" method="post">
+			<div class="search-item">
+				<input type="text" id="search-input" name="actor" placeholder="Search Actor here"> <input type="text" id="search-input" name="title" placeholder="Search Title here"> <input type="text" id="search-input" name="director" placeholder="Search Director here">
+			</div>
+
+			<button type="submit" hidden></button>
+		</form>
+	</div>
+</div>
+
+<th:block th:if="${message}" th:fragment="alert-message">
+	<script th:inline="javascript">
+        window.onload = () => {
+          const message = '[[${message}]]';
+			if(message) {
+				alert(message);	
+			}
+        }
+      </script>
+</th:block>
+
+</html>
