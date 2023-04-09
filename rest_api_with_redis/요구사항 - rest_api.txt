@@ -1,0 +1,75 @@
+요구사항
+
+1. 개요
+    REST API + JWT + REDIS 방식 연습 목적.
+
+2. 스택
+    spring boot, spring security, spring jpa, postgresql, redis
+
+3. 요청
+    3-1) login
+        method : post
+        권한 : 없음
+        value : nickname, password
+        정보 :
+            사용자가 로그인 요청을 하면, 로그인 로직을 수행함.
+            로그인에 성공하면 response header에 access token과 refresh token을 넣어줌.
+    
+    3-2) logout
+        method : get
+        권한 : ROLE_USER
+        정보 : 
+            request의 header에서 access token과 refresh token을 가져옴.
+            access token은 logout체크를 위해서 남은 기간만큼 redis에 저장.
+            redis에 저장된 refresh은 삭제함.
+
+    3-3) join
+        method : post
+        정보 :
+            회원가입에 필요한 정보를 입력함.
+            simple_movie 프로젝트에서 생성한 테이블을 그대로 사용하기 때문에 simple_movie과 동일한 로직을 수행함
+    
+    3-4) search
+        method : get
+        권한 : ROLE_MANAGER
+        requestParam : nickname
+        정보 :
+            닉네임을 통해서 시스템에 가입한 사용자의 정보를 조회.
+            권한이 MANAGER 이상부터 가능함.
+        응답 :
+            JSON
+
+4. DB
+    4-1) account 테이블
+        simple_movie에 회원 테이블을 사용함.
+
+    4-2) redis - logoutToken
+        id : pk
+        nickname : 사용자 닉네임
+        accessToken : 로그아웃을 위해 저장한 access 토큰
+        expiration : @TimeToLive
+
+    4-3) redis - refreshToken
+        id : pk
+        refresh token : access token 재발급을 위한 토큰
+        nickname : 사용자 닉네임
+        expiration : @TimeToLive
+
+  
+
+5. ToDo
+    5-1) JPA
+        JPA에 의해 생성되는 쿼리 체크 및 수정
+    
+    5-2) REDIS
+        TTL 테스트를 수행해야 함
+    
+    5-3) 소스 리팩토링
+
+    5-4) 토큰 반환 방식 변경
+        토큰을 발급해줄 때, 지금은 response의 header에 넣어서 주는데 
+        이걸 JSON 형식으로 반환해주던가
+        쿠키로 생성해서 넘길지 생각중.
+
+        
+    
