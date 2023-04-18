@@ -51,7 +51,7 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		/*
-		 * 이건 시큐리티의 세션 정책인데 개시발.
+		 * 이건 시큐리티의 세션 정책
 		 * 메인페이지에서 csrf disable 안 하면, search부분에서 csrf 토큰을 생성하려고 하는데 거기서 세션 관련해서 에러가 발생함.
 		 * 그래서 이걸 넣어주면 해결됨
 		 */
